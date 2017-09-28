@@ -1,10 +1,10 @@
 
 
+
 # maybe-base is mostly a noop so that we can decide whether to
 # rebuild base boxes as a chain to this
-java-base:
-  box:
-    id: fnproject/fn-java-fdk-build:latest
+build:
+  box: busybox
   steps:
     - script:
         name: noop
