@@ -20,6 +20,7 @@ You can configure the slack channel in FLOW101_SLACK_CHANNEL in `setenv.sh`
 
 
 # Script 
+
 This is a demo that walks through a simple  example that shows how to build long-running processes that use parallelism, asynchronous chaining and error handling in Fn using Fn Flow . 
 
 Functions as a service platforms like Fn  are great for deploying code in small, independent units  like event handlers, simple REST services, and worker processes that only use resources when they are active and scale organically based on demand.  
