@@ -55,8 +55,7 @@ bash-image:
             cmd: ./func.sh
 
 update-fn-route:
-   box:
-     id: ubuntu:16.04
+   box: busybox
    steps:
       - script:
          name: update route
