@@ -56,11 +56,11 @@ bash-image:
 
 update-fn-route:
    box:
-     id: fnproject/fn
-     entrypoint: /bin/sh -c /bin/sh 
+     id: ubuntu:16.04
    steps:
       - script:
          name: update route
          code: |
+           curl -O ./fn https://github.com/fnproject/cli/releases/download/0.97/fn_linux
            echo ./fn routes update app $PATH --ignore-fn-file  --image $DOCKER_REPO/$IMAGE:$WERCKER_GIT_COMMIT
 
