@@ -1,6 +1,3 @@
-
-
-
 # maybe-base is mostly a noop so that we can decide whether to
 # rebuild base boxes as a chain to this
 build:
@@ -10,6 +7,7 @@ build:
         name: noop
         code: echo "Building app"
 
+        
 post-slack-build:
    box:
     id: fnproject/fn-java-fdk-build:1.0.36
