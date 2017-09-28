@@ -29,7 +29,7 @@ java-image:
             name: copy artifacts
             code: |
               mkdir -p /function/app/
-              mv post-slack/function/app/* /function/app/
+              cp post-slack/function/app/* /function/app/
      - internal/docker-push:
             repository: $DOCKER_REPO/$IMAGE
             username: $DOCKER_USERNAME
