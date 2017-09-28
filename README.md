@@ -1,23 +1,6 @@
 # FnFlow 101 demo 
 This demo walks through the Fn Flow system from scratch with a simple example . 
 
-## Pre-reqs:
-Ensure that the [general demo setup instructions have been followed](../README.md) at least once on the machine you are using. 
-
-## Notes to demoer  
-
-* Open flow101 in intellij 
-  * import flow1/functions/flow as a maven project (if not done automatically)
-  * your project should have `functions` visible in the top-level directory  
-*  Open the flow UI before starting the function : [http://localhost:3000](http://localhost:3000)
-   * You can reset the UI by reloading in the browser.  
-* open slack and get into the correct demo room (`fnflow101` by default)  for the demo booth you are on 
-* copy conference-demo-scripts/flow101/ to /demo  (optional - but it makes the terminal a bit more snesible.)
-* Have a terminal window open 
-
-You can configure the slack channel in FLOW101_SLACK_CHANNEL in `setenv.sh`
-
-
 
 # Script 
 

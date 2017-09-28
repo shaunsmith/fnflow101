@@ -34,6 +34,162 @@ post-slack-image:
             repository: $DOCKER_REPO/flow101-post-slack
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
-            tag: latest
+            tag: $WERCKER_GIT_COMMIT
             entrypoint: /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2 -XX:+UseSerialGC -Xshare:on -cp /function/app/*:/function/runtime/* com.fnproject.fn.runtime.EntryPoint
             cmd: com.example.vista.PostToSlack::postToSlack
+
+update-fn-route-post-slack:
+   box:
+     id: fnproject/fn
+     entrypoint: /bin/sh
+   steps:
+      - script:
+         name: update route
+         code: |
+           echo ./fn routes update app /post-slack --ignore-fn-file  --image $DOCKER_REPO/flow101-post-slack:$WERCKER_GIT_COMMIT
+
+flow-build:
+   box:
+    id: fnproject/fn-java-fdk-build:1.0.36
+   steps:
+     - script:
+         name: build java
+         code: |
+          cd functions/flow
+          mvn  package  dependency:copy-dependencies -DincludeScope=runtime -DskipTests=true -Dmdep.prependGroupId=true -DoutputDirectory=target
+          mkdir -p $WERCKER_OUTPUT_DIR/post-slack/function/app/
+          cp target/*.jar $WERCKER_OUTPUT_DIR/post-slack/function/app/
+
+flow-image:
+   box:
+      id: fnproject/fn-java-fdk:1.0.36
+      entrypoint: /bin/sh -c /bin/bash
+   steps:
+     - script:
+            name: copy artifacts
+            code: |
+              mkdir -p /function/app/
+              mv post-slack/function/app/* /function/app/
+     - internal/docker-push:
+            repository: $DOCKER_REPO/flow101-flow
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+            tag: $WERCKER_GIT_COMMIT
+            entrypoint: /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2 -XX:+UseSerialGC -Xshare:on -cp /function/app/*:/function/runtime/* com.fnproject.fn.runtime.EntryPoint
+            cmd: com.example.flowstart.FlowSimple::handleRequest
+
+update-fn-route-flow:
+   box:
+     id: fnproject/fn
+     entrypoint: /bin/sh
+   steps:
+      - script:
+         name: update route
+         code: |
+           echo ./fn routes update app /flow --ignore-fn-file  --image $DOCKER_REPO/flow101-flow:$WERCKER_GIT_COMMIT
+
+
+
+gettext-image:
+   box:
+      id: ubuntu:16.04
+   steps:
+     - script:
+            name: copy data
+            code: |
+                cp -r ./data ./func.sh /
+     - internal/docker-push:
+            repository: $DOCKER_REPO/flow101-gettext
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+            tag: $WERCKER_GIT_COMMIT
+            cmd: ./func.sh
+
+update-fn-route-gettext:
+   box:
+     id: fnproject/fn
+     entrypoint: /bin/sh
+   steps:
+      - script:
+         name: update route
+         code: |
+           echo ./fn routes update app /gettext --ignore-fn-file  --image $DOCKER_REPO/flow101-gettext:$WERCKER_GIT_COMMIT
+
+
+grep-image:
+   box:
+      id: ubuntu:16.04
+   steps:
+     - script:
+            name: copy data
+            code: |
+                cp ./func.sh /
+     - internal/docker-push:
+            repository: $DOCKER_REPO/flow101-grep
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+            tag: $WERCKER_GIT_COMMIT
+            cmd: ./func.sh
+
+update-fn-route-grep:
+   box:
+     id: fnproject/fn
+     entrypoint: /bin/sh
+   steps:
+      - script:
+         name: update route
+         code: |
+           echo ./fn routes update app /grep --ignore-fn-file  --image $DOCKER_REPO/flow101-grep:$WERCKER_GIT_COMMIT
+
+
+head-image:
+   box:
+      id: ubuntu:16.04
+   steps:
+     - script:
+            name: copy data
+            code: |
+                cp ./func.sh /
+     - internal/docker-push:
+            repository: $DOCKER_REPO/flow101-head
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+            tag: $WERCKER_GIT_COMMIT
+            cmd: ./func.sh
+
+update-fn-route-head:
+   box:
+     id: fnproject/fn
+     entrypoint: /bin/sh
+   steps:
+      - script:
+         name: update route
+         code: |
+           echo ./fn routes update app /head --ignore-fn-file  --image $DOCKER_REPO/flow101-head:$WERCKER_GIT_COMMIT
+
+
+linecount-image:
+   box:
+      id: ubuntu:16.04
+   steps:
+     - script:
+            name: copy data
+            code: |
+                cp ./func.sh /
+     - internal/docker-push:
+            repository: $DOCKER_REPO/flow101-linecount
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+            tag: $WERCKER_GIT_COMMIT
+            cmd: ./func.sh
+
+update-fn-route-linecount:
+   box:
+     id: fnproject/fn
+     entrypoint: /bin/sh
+   steps:
+      - script:
+         name: update route
+         code: |
+           echo ./fn routes update app /linecount --ignore-fn-file  --image $DOCKER_REPO/flow101-linecount:$WERCKER_GIT_COMMIT
+
