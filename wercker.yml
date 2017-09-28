@@ -57,7 +57,7 @@ bash-image:
 update-fn-route:
    box:
      id: fnproject/fn
-     entrypoint: /bin/sh
+     entrypoint: /bin/sh -c /bin/sh 
    steps:
       - script:
          name: update route
