@@ -60,7 +60,7 @@ update-fn-route:
      - script:
          name: update route
          code: |
-          apt-get update && apt-get install curl
+          apt-get update && apt-get -y  install curl
           curl -O ./fn https://github.com/fnproject/cli/releases/download/0.97/fn_linux
           echo ./fn routes update app $FN_PATH --ignore-fn-file  --image $DOCKER_REPO/$IMAGE:$WERCKER_GIT_COMMIT
 
