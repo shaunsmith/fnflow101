@@ -1,5 +1,4 @@
-# maybe-base is mostly a noop so that we can decide whether to
-# rebuild base boxes as a chain to this
+
 build:
   box: busybox
   steps:
@@ -29,7 +28,8 @@ java-image:
             name: copy artifacts
             code: |
               mkdir -p /function/app/
-              cp post-slack/function/app/* /function/app/
+              mv post-slack/function/app/* /function/app/
+              touch file
      - internal/docker-push:
             repository: $DOCKER_REPO/$IMAGE
             username: $DOCKER_USERNAME
