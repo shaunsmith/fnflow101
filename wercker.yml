@@ -8,11 +8,11 @@ build:
   steps:
     - script:
         name: noop
-        code: echo "hello world"
+        code: echo "Building app"
 
 post-slack-build:
    box:
-    id: "fnproject/fn-java-fdk-build:1.0.36"
+    id: fnproject/fn-java-fdk-build:1.0.36
    steps:
      - script:
          name: build java
@@ -33,8 +33,9 @@ post-slack-image:
               mkdir -p /function/app/
               mv post-slack/function/app/* /function/app/
      - internal/docker-push:
-            repository: zootalures/post-slack
+            repository: $DOCKER_REPO/flow101-post-slack
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
             tag: latest
+            entrypoint: /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2 -XX:+UseSerialGC -Xshare:on -cp /function/app/*:/function/runtime/* com.fnproject.fn.runtime.EntryPoint
             cmd: com.example.vista.PostToSlack::postToSlack
