@@ -16,8 +16,8 @@ java-build:
          code: |
           cd $FUNC_DIR
           mvn  package  dependency:copy-dependencies -DincludeScope=runtime -DskipTests=true -Dmdep.prependGroupId=true -DoutputDirectory=target
-          mkdir -p $WERCKER_OUTPUT_DIR/post-slack/function/app/
-          cp target/*.jar $WERCKER_OUTPUT_DIR/post-slack/function/app/
+          mkdir -p $WERCKER_OUTPUT_DIR/
+          cp target/*.jar $WERCKER_OUTPUT_DIR/
 
 java-image:
    box:
@@ -28,7 +28,7 @@ java-image:
             name: copy artifacts
             code: |
               mkdir -p /function/app/
-              mv post-slack/function/app/* /function/app/
+              mv *.jar /function/app/
               touch file
      - internal/docker-push:
             repository: $DOCKER_REPO/$IMAGE
@@ -41,7 +41,7 @@ java-image:
 
 bash-image:
    box:
-      id: ubuntu:16.04
+      id: oraclelinux:7-slim
    steps:
      - script:
             name: copy data
@@ -55,13 +55,13 @@ bash-image:
             cmd: ./func.sh
 
 update-fn-route:
-   box: ubuntu:16.04
+   box: oraclelinux:7-slim
    steps:
      - script:
          name: update route
          code: |
-          apt-get update && apt-get -y  install curl
-          curl -O ./fn https://github.com/fnproject/cli/releases/download/0.97/fn_linux
+          curl -L -o ./fn https://github.com/fnproject/cli/releases/download/0.3.97/fn_linux
+          chmod +x ./fn
           echo ./fn routes update app $FN_PATH --ignore-fn-file  --image $DOCKER_REPO/$IMAGE:$WERCKER_GIT_COMMIT
 
 
