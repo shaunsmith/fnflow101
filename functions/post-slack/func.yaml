@@ -1,6 +1,6 @@
 name: post-slack
-version: 0.0.88
-runtime: java
+version: 0.0.89
+runtime: java8
 cmd: com.example.vista.PostToSlack::postToSlack
 memory: 128
 format: http
