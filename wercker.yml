@@ -54,13 +54,13 @@ bash-image:
             tag: $WERCKER_GIT_COMMIT
             cmd: ./func.sh
 
-
-update-fn-route:
+java-build:
    box: busybox
    steps:
-      - script:
+     - script:
          name: update route
          code: |
-           curl -O ./fn https://github.com/fnproject/cli/releases/download/0.97/fn_linux
-           echo ./fn routes update app $PATH --ignore-fn-file  --image $DOCKER_REPO/$IMAGE:$WERCKER_GIT_COMMIT
+          curl -O ./fn https://github.com/fnproject/cli/releases/download/0.97/fn_linux
+          echo ./fn routes update app $FN_PATH --ignore-fn-file  --image $DOCKER_REPO/$IMAGE:$WERCKER_GIT_COMMIT
+
 
