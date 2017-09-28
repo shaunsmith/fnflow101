@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e 
+word=${FN_HEADER_WORD:-'.*'}
+
+grep -ie  "$word"

@@ -1,0 +1,11 @@
+FROM fnproject/fn-java-fdk-build:jdk9-latest as build-stage
+WORKDIR /function
+ENV MAVEN_OPTS -Dhttp.proxyHost=emea-proxy.uk.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=emea-proxy.uk.oracle.com -Dhttps.proxyPort=80 -Dhttp.nonProxyHosts=10.167.103.241|artifactory-slc.oraclecorp.com|192.168.99.100|*.oraclecorp.com|*.oracle.com -Dmaven.repo.local=/usr/share/maven/ref/repository
+ADD pom.xml /function/pom.xml
+RUN ["mvn", "package", "dependency:copy-dependencies", "-DincludeScope=runtime", "-DskipTests=true", "-Dmdep.prependGroupId=true", "-DoutputDirectory=target", "--fail-never"]
+ADD src /function/src
+RUN ["mvn", "package"]
+FROM fnproject/fn-java-fdk:jdk9-latest
+WORKDIR /function
+COPY --from=build-stage /function/target/*.jar /function/app/
+CMD ["com.example.vista.PostToSlack::postToSlack"]

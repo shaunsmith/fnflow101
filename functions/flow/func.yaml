@@ -1,0 +1,5 @@
+name: flow101
+version: 0.0.41
+runtime: java
+cmd: com.example.flowstart.FlowSimple::handleRequest
+format: http

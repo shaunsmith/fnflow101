@@ -1,0 +1,7 @@
+#!/bin/bash 
+lines=${FN_HEADER_Lines:-10}
+(>&2 env )
+
+(>&2 echo Taking first $lines )
+
+cat head -n $lines

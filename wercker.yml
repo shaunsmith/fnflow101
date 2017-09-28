@@ -1,0 +1,39 @@
+
+
+# maybe-base is mostly a noop so that we can decide whether to
+# rebuild base boxes as a chain to this
+java-base:
+  box:
+    id: fnproject/fn-java-fdk-build:latest
+  steps:
+    - script:
+        name: noop
+        code: echo "hello world"
+
+post-slack-build:
+   box:
+    id: "fnproject/fn-java-fdk-build:1.0.36"
+   steps:
+     - script:
+         name: build java
+         code: |
+          cd functions/post-slack
+          mvn  package  dependency:copy-dependencies -DincludeScope=runtime -DskipTests=true -Dmdep.prependGroupId=true -DoutputDirectory=target
+          mkdir -p $WERCKER_OUTPUT_DIR/post-slack/function/app/
+          cp target/*.jar $WERCKER_OUTPUT_DIR/post-slack/function/app/
+
+post-slack-image:
+   box:
+      id: fnproject/fn-java-fdk:1.0.36
+      entrypoint: /bin/sh -c /bin/bash
+   steps:
+     - script:
+            name: copy artifacts
+            code: |
+              mv post-slack/function/app/* /function/app/
+     - internal/docker-push:
+            repository: zootalures/post-slack
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+            tag: latest
+            cmd: com.example.vista.PostToSlack::postToSlack
