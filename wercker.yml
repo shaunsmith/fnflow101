@@ -30,6 +30,7 @@ post-slack-image:
      - script:
             name: copy artifacts
             code: |
+              mkdir -p /function/app/
               mv post-slack/function/app/* /function/app/
      - internal/docker-push:
             repository: zootalures/post-slack
