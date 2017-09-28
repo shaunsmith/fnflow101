@@ -54,6 +54,7 @@ bash-image:
             tag: $WERCKER_GIT_COMMIT
             cmd: ./func.sh
 
+
 update-fn-route:
    box: busybox
    steps:
