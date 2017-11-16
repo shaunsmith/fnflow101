@@ -31,7 +31,6 @@ fn-push-java:
               mv *.jar /function/app/
               touch file
      - internal/docker-push:
-            repository: $IMAGE_NAME
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
             tag: $WERCKER_GIT_COMMIT
