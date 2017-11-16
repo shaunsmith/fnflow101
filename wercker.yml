@@ -32,6 +32,7 @@ fn-push-java:
               touch file
      - internal/docker-push:
             repository: shaunsmith/wercker-flowjava
+            registry: https://registry.hub.docker.com
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
             tag: $WERCKER_GIT_COMMIT
