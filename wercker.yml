@@ -15,6 +15,7 @@ fn-build-java:
          code: |
           cd $FUNC_DIR
           mvn  package  dependency:copy-dependencies -DincludeScope=runtime -DskipTests=true -Dmdep.prependGroupId=true -DoutputDirectory=target
+          echo "output dir: $WERCKER_OUTPUT_DIR"
           mkdir -p $WERCKER_OUTPUT_DIR/
           cp target/*.jar $WERCKER_OUTPUT_DIR/
 
@@ -30,7 +31,7 @@ fn-push-java:
               mv *.jar /function/app/
               touch file
      - internal/docker-push:
-            repository: $DOCKER_REPO/$FUNC_DIR
+            repository: $FUNC_DIR
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
             tag: $WERCKER_GIT_COMMIT
