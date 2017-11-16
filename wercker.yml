@@ -5,11 +5,10 @@ build:
     - script:
         name: noop
         code: echo "Building app"
-
         
-java-build:
+fn-build-java:
    box:
-    id: fnproject/fn-java-fdk-build:1.0.36
+    id: fnproject/fn-java-fdk-build:1.0.47
    steps:
      - script:
          name: build java
@@ -19,9 +18,9 @@ java-build:
           mkdir -p $WERCKER_OUTPUT_DIR/
           cp target/*.jar $WERCKER_OUTPUT_DIR/
 
-java-image:
+fn-push-java:
    box:
-      id: fnproject/fn-java-fdk:1.0.36
+      id: fnproject/fn-java-fdk:1.0.47
       entrypoint: /bin/sh -c /bin/bash
    steps:
      - script:
@@ -31,7 +30,7 @@ java-image:
               mv *.jar /function/app/
               touch file
      - internal/docker-push:
-            repository: $DOCKER_REPO/$IMAGE
+            repository: $DOCKER_REPO/$FUNC_DIR
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
             tag: $WERCKER_GIT_COMMIT
@@ -39,29 +38,15 @@ java-image:
             cmd: $ENTRYPOINT
 
 
-bash-image:
-   box:
-      id: oraclelinux:7-slim
-   steps:
-     - script:
-            name: copy data
-            code: |
-                cp -r ./$FUNC_DIR/* /
-     - internal/docker-push:
-            repository: $DOCKER_REPO/$IMAGE
-            username: $DOCKER_USERNAME
-            password: $DOCKER_PASSWORD
-            tag: $WERCKER_GIT_COMMIT
-            cmd: ./func.sh
-
-update-fn-route:
+fn-update-route:
    box: oraclelinux:7-slim
    steps:
      - script:
          name: update route
          code: |
-          curl -L -o ./fn https://github.com/fnproject/cli/releases/download/0.3.97/fn_linux
+          curl -L -o ./fn https://github.com/fnproject/cli/releases/download/0.4.17/fn_linux
           chmod +x ./fn
-          echo ./fn routes update app $FN_PATH --ignore-fn-file  --image $DOCKER_REPO/$IMAGE:$WERCKER_GIT_COMMIT
+          export API_URL=$FN_SERVER
+          echo ./fn routes update app $FN_APP --ignore-fn-file  --image $DOCKER_REPO/$IMAGE:$WERCKER_GIT_COMMIT
 
 
